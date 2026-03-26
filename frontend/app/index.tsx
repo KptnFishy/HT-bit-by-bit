@@ -1,16 +1,5 @@
-import { Text, View } from "react-native";
-import Gyroscope from "../components/gyro";
+import { Redirect } from 'expo-router';
 
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Gyroscope />
-    </View>
-  );
+  return <Redirect href="/(tabs)" />;
 }
