@@ -19,7 +19,7 @@ export default function RouteShare() {
             rating: 4.5,
             uploaderName: 'Marco V.',
             uploaderAvatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=150&q=80',
-            mapImageUrl: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&w=800&q=80'
+            mapImageUrl: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80' // Snowy mountain peak
         },
         {
             id: '2',
@@ -30,7 +30,7 @@ export default function RouteShare() {
             rating: 4,
             uploaderName: 'Sarah K.',
             uploaderAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80',
-            mapImageUrl: 'https://images.unsplash.com/photo-1601288496920-b6154fe3626a?auto=format&fit=crop&w=800&q=80'
+            mapImageUrl: 'https://loremflickr.com/800/600/snow,mountain?lock=2' 
         },
         {
             id: '3',
@@ -41,7 +41,84 @@ export default function RouteShare() {
             rating: 5,
             uploaderName: 'Lukas B.',
             uploaderAvatar: 'https://images.unsplash.com/photo-1541256942802-7a09c25f778a?auto=format&fit=crop&w=150&q=80',
-            mapImageUrl: 'https://images.unsplash.com/photo-1524316045187-b9c1cb807a51?auto=format&fit=crop&w=800&q=80'
+            mapImageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80' 
+        },
+        {
+            id: '4',
+            title: 'Weiße Hölle',
+            distance: '18.5',
+            location: 'St. Anton, Österreich',
+            difficulty: 'SCHWER',
+            rating: 4.5,
+            uploaderName: 'Elena M.',
+            uploaderAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80',
+            mapImageUrl: 'https://loremflickr.com/800/600/snow,mountain?lock=4' 
+        },
+        {
+            id: '5',
+            title: 'Panorama-Route',
+            distance: '8.1',
+            location: 'Chamonix, Frankreich',
+            difficulty: 'MITTEL',
+            rating: 5,
+            uploaderName: 'Jan P.',
+            uploaderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+            mapImageUrl: 'https://loremflickr.com/800/600/snow,mountain?lock=5' 
+        },
+        {
+            id: '6',
+            title: 'Tiefschnee-Traum',
+            distance: '4.5',
+            location: 'Lech, Österreich',
+            difficulty: 'SCHWER',
+            rating: 4,
+            uploaderName: 'Anna W.',
+            uploaderAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+            mapImageUrl: 'https://loremflickr.com/800/600/snow,mountain?lock=6' 
+        },
+        {
+            id: '7',
+            title: 'Familienabfahrt Nord',
+            distance: '6.0',
+            location: 'Kitzbühel, Österreich',
+            difficulty: 'LEICHT',
+            rating: 3.5,
+            uploaderName: 'Tom H.',
+            uploaderAvatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=150&q=80',
+            mapImageUrl: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=800&q=80' 
+        },
+        {
+            id: '8',
+            title: 'Schneebruch-Trail',
+            distance: '15.2',
+            location: 'Verbier, Schweiz',
+            difficulty: 'SCHWER',
+            rating: 4.5,
+            uploaderName: 'David B.',
+            uploaderAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
+            mapImageUrl: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=800&q=80' 
+        },
+        {
+            id: '9',
+            title: 'Waldlauf Süd',
+            distance: '7.8',
+            location: 'Sölden, Österreich',
+            difficulty: 'MITTEL',
+            rating: 4,
+            uploaderName: 'Lisa F.',
+            uploaderAvatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80',
+            mapImageUrl: 'https://loremflickr.com/800/600/snow,mountain?lock=9' 
+        },
+        {
+            id: '10',
+            title: 'Morgenrot-Skiing',
+            distance: '9.3',
+            location: 'Seefeld, Österreich',
+            difficulty: 'LEICHT',
+            rating: 5,
+            uploaderName: 'Max C.',
+            uploaderAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
+            mapImageUrl: 'https://loremflickr.com/800/600/snow,mountain?lock=10' 
         }
     ];
 

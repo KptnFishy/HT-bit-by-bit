@@ -66,7 +66,7 @@ const mockUsers = generateMockExpanded();
 const RankBadge = ({ rank }: { rank: number }) => {
     let bgClass = "bg-[#131b2e]";
     let textClass = "text-[#9ca3af]";
-    let borderClass = "";
+    let dynamicStyle: any = {};
 
     if (rank === 1) {
         bgClass = "bg-[#ffd700]"; textClass = "text-[#0b1326]";
@@ -75,11 +75,12 @@ const RankBadge = ({ rank }: { rank: number }) => {
     } else if (rank === 3) {
         bgClass = "bg-[#cd7f32]"; textClass = "text-[#0b1326]";
     } else if (rank <= 10) {
-        bgClass = "bg-[#22d3ee]/20"; textClass = "text-[#8aebff]";
+        bgClass = ""; textClass = "text-[#8aebff]";
+        dynamicStyle = { backgroundColor: 'rgba(34, 211, 238, 0.2)' }; // #22d3ee/20
     }
 
     return (
-        <View className={`${bgClass} ${borderClass} w-8 h-8 rounded-full items-center justify-center`}>
+        <View className={`${bgClass} w-8 h-8 rounded-full items-center justify-center`} style={dynamicStyle}>
             <Text className={`${textClass} text-xs font-black tracking-tighter`}>
                 {rank}
             </Text>
@@ -93,33 +94,38 @@ const LeaderboardRow = ({ user, rank, activeMetricDef, isCurrentUser = false }: 
     let nameClass = "text-white text-sm font-bold tracking-tight";
     let scoreClass = "text-white text-xl font-black tracking-tighter";
     let avatarClass = "w-10 h-10 rounded-full mr-4 bg-black overflow-hidden";
+    let containerStyle: any = {};
 
     if (rank === 1) {
-        containerClass = "flex-row items-center px-5 py-5 mb-3 rounded-[24px] bg-[#ffd700]/10 border border-[#ffd700]/50";
+        containerClass = "flex-row items-center px-5 py-5 mb-3 rounded-[24px] border";
         nameClass = "text-white text-lg font-black tracking-tight";
         scoreClass = "text-[#ffd700] text-3xl font-black tracking-tighter";
         avatarClass = "w-14 h-14 rounded-full mr-4 bg-black overflow-hidden border-2 border-[#ffd700]";
+        containerStyle = { backgroundColor: 'rgba(255, 215, 0, 0.1)', borderColor: 'rgba(255, 215, 0, 0.5)' };
     } else if (rank === 2) {
-        containerClass = "flex-row items-center px-4 py-4 mb-2 rounded-[20px] bg-[#c0c0c0]/10 border border-[#c0c0c0]/30";
+        containerClass = "flex-row items-center px-4 py-4 mb-2 rounded-[20px] border";
         nameClass = "text-white text-base font-bold tracking-tight";
         scoreClass = "text-[#c0c0c0] text-2xl font-black tracking-tighter";
         avatarClass = "w-12 h-12 rounded-full mr-4 bg-black overflow-hidden border border-[#c0c0c0]";
+        containerStyle = { backgroundColor: 'rgba(192, 192, 192, 0.1)', borderColor: 'rgba(192, 192, 192, 0.3)' };
     } else if (rank === 3) {
-        containerClass = "flex-row items-center px-4 py-4 mb-2 rounded-[20px] bg-[#cd7f32]/10 border border-[#cd7f32]/30";
+        containerClass = "flex-row items-center px-4 py-4 mb-2 rounded-[20px] border";
         nameClass = "text-white text-base font-bold tracking-tight";
         scoreClass = "text-[#cd7f32] text-2xl font-black tracking-tighter";
         avatarClass = "w-12 h-12 rounded-full mr-4 bg-black overflow-hidden border border-[#cd7f32]";
+        containerStyle = { backgroundColor: 'rgba(205, 127, 50, 0.1)', borderColor: 'rgba(205, 127, 50, 0.3)' };
     }
 
     if (isCurrentUser) {
-        containerClass = `flex-row items-center px-4 py-3 mb-2 rounded-[16px] bg-[#222a3d] border border-[#22d3ee]`; // Highlight current user
+        containerClass = `flex-row items-center px-4 py-3 mb-2 rounded-[16px] bg-[#222a3d] border border-[#22d3ee] shadow-lg`;
+        containerStyle = { shadowColor: '#22d3ee', shadowOpacity: 0.5, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } };
         if (rank <= 3) {
-            containerClass += " shadow-lg shadow-[#22d3ee]/50"; // Even stronger highlight
+            containerClass = `flex-row items-center ${rank === 1 ? 'px-5 py-5 mb-3 rounded-[24px]' : 'px-4 py-4 mb-2 rounded-[20px]'} bg-[#222a3d] border-2 border-[#22d3ee] shadow-lg`;
         }
     }
 
     return (
-        <View className={containerClass}>
+        <View className={containerClass} style={containerStyle}>
             <View className="w-10 items-center justify-center mr-2">
                 <RankBadge rank={rank} />
             </View>
@@ -165,12 +171,17 @@ export default function Leaderboard() {
     const currentUserData = enrichedUsers.find(u => u.id === CURRENT_USER_ID);
 
     // Viewport Intersection tracking
-    const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
+    const onViewableItemsChanged = React.useCallback(({ viewableItems }: { viewableItems: ViewToken[] }) => {
         const isVisible = viewableItems.some(v => v.item.id === CURRENT_USER_ID);
-        setIsUserOnScreen(isVisible);
-    }).current;
+        
+        // Wrap state update in requestAnimationFrame to prevent React synchronous 
+        // unmount/re-render crashes (like Navigation Context errors) when FlatList data aggressively re-sorts.
+        requestAnimationFrame(() => {
+            setIsUserOnScreen(isVisible);
+        });
+    }, []);
 
-    const viewabilityConfig = useRef({
+    const viewabilityConfig = React.useRef({
         itemVisiblePercentThreshold: 10,
         minimumViewTime: 100
     }).current;
