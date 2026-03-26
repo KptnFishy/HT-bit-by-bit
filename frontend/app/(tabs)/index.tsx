@@ -1,86 +1,74 @@
-import React, { useEffect, useRef } from "react";
-import { View, StyleSheet, Platform, Text } from "react-native";
-import * as maptilersdk from '@maptiler/sdk';
-
-// IMPORTANT: Essential for 3D buttons and map scaling
-import '@maptiler/sdk/dist/maptiler-sdk.css';
+import React from 'react';
+import { StyleSheet, View, Dimensions } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 export default function Index() {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<maptilersdk.Map | null>(null);
+  const API_KEY = 'bf6kRWUoAyyCl2UMxaBC';
 
-  useEffect(() => {
-    // 1. Guard against non-web environments
-    if (Platform.OS !== 'web') return;
-    if (map.current) return; 
+  // This is the HTML/JavaScript that will run inside your mobile app
+  const mapHtml = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.min.js"></script>
+        <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+        <style>
+          body { margin: 0; padding: 0; }
+          #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        </style>
+      </head>
+      <body>
+        <div id="map"></div>
+        <script>
+          maptilersdk.config.apiKey = '${API_KEY}';
+          const map = new maptilersdk.Map({
+            container: 'map',
+            style: maptilersdk.MapStyle.OUTDOOR,
+            center: [10.132438, 47.220528],
+            zoom: 14,
+            terrain: true,
+            terrainControl: true,
+            pitch: 70
+          });
 
-    // 2. Set your API Key
-    maptilersdk.config.apiKey = 'bf6kRWUoAyyCl2UMxaBC';
-
-    if (mapContainer.current) {
-      // 3. Initialize the 3D Map
-      map.current = new maptilersdk.Map({
-        container: mapContainer.current,
-        style: maptilersdk.MapStyle.OUTDOOR,
-        center: [8.94738, 45.97812], // Geopoint (Swiss Alps area)
-        zoom: 14,
-        terrain: true,               // Enable 3D Terrain
-        terrainControl: true,        // Enable the 3D toggle button
-        pitch: 70,                   // 3D Tilt angle
-        bearing: -100,               // Camera rotation
-        maxPitch: 85,
-      });
-
-      // 4. Add a Route (Line) once the map loads
-      map.current.on('load', () => {
-        map.current?.addSource('route', {
-          type: 'geojson',
-          data: {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'LineString',
-              coordinates: [
-                [8.940, 45.970],
-                [8.947, 45.978],
-                [8.955, 45.985],
-              ],
-            },
-          },
-        });
-
-        map.current?.addLayer({
-          id: 'route-layer',
-          type: 'line',
-          source: 'route',
-          layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: {
-            'line-color': '#ff0000', // Red route line
-            'line-width': 5,
-          },
-        });
-      });
-    }
-
-    // Cleanup on unmount
-    return () => {
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
-      }
-    };
-  }, []);
+          map.on('load', () => {
+            map.addSource('route', {
+              type: 'geojson',
+              data: {
+                type: 'Feature',
+                geometry: {
+                  type: 'LineString',
+                  coordinates: [
+                    [10.120, 47.210],
+                    [10.132438, 47.220528],
+                    [10.145, 47.230]
+                  ]
+                }
+              }
+            });
+            map.addLayer({
+              id: 'route-layer',
+              type: 'line',
+              source: 'route',
+              paint: { 'line-color': '#ff0000', 'line-width': 5 }
+            });
+          });
+        </script>
+      </body>
+    </html>
+  `;
 
   return (
     <View style={styles.container}>
-      {/* On Web, we render the div. On Mobile, we show a fallback message */}
-      {Platform.OS === 'web' ? (
-        <div ref={mapContainer} style={styles.mapWeb} />
-      ) : (
-        <View style={styles.fallback}>
-          <Text>Please run this in a Web Browser</Text>
-        </View>
-      )}
+      <WebView
+        originWhitelist={['*']}
+        source={{ html: mapHtml }}
+        style={styles.map}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+        startInLoadingState={true}
+      />
     </View>
   );
 }
@@ -88,20 +76,10 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
-  mapWeb: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    width: '100%',
-    height: '100%',
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
-  fallback: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#111',
-  }
 });
