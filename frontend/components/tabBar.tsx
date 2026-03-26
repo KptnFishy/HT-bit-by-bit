@@ -5,6 +5,12 @@ import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+    // Allow dynamic hiding from screens using React Navigation options
+    const focusedOptions = descriptors[state.routes[state.index].key].options;
+    if ((focusedOptions as any).tabBarStyle?.display === 'none') {
+        return null;
+    }
+
     // 1. ANIMATION SETUP
     const [dimensions, setDimensions] = useState({ height: 20, width: 100 });
 

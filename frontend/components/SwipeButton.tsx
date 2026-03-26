@@ -9,6 +9,7 @@ interface SwipeButtonProps {
     containerColor?: string;
     textColor?: string;
     direction?: 'right' | 'left';
+    pulseEffect?: boolean;
 }
 
 const BUTTON_WIDTH = Dimensions.get('window').width - 40; // 20px padding both sides
@@ -22,10 +23,29 @@ export const SwipeButton = ({
     sliderColor = '#22d3ee', // primary
     containerColor = '#131b2e', // surface container
     textColor = '#9ca3af',
-    direction = 'right'
+    direction = 'right',
+    pulseEffect = true
 }: SwipeButtonProps) => {
     const pan = useRef(new Animated.Value(0)).current;
     const [swiped, setSwiped] = useState(false);
+    
+    // Wave Animation 
+    const waveAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        if (pulseEffect && !swiped) {
+            Animated.loop(
+                Animated.timing(waveAnim, {
+                    toValue: 1,
+                    duration: 2000,
+                    useNativeDriver: false, // Scale/Opacity can use native, but RN web sometimes struggles with absolute native loops
+                })
+            ).start();
+        } else {
+            waveAnim.setValue(0);
+            waveAnim.stopAnimation();
+        }
+    }, [pulseEffect, swiped]);
 
     let isLeft = direction === 'left';
 
@@ -78,24 +98,53 @@ export const SwipeButton = ({
     const animatedStyles = {
         transform: [{ translateX: pan }]
     };
+    
+    // Calculate Wave Styles for Container
+    const waveScaleX = waveAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [1, 1.05] // Subtle width expansion
+    });
+    const waveScaleY = waveAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [1, 1.3] // Larger height expansion
+    });
+    const waveOpacity = waveAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0.5, 0]
+    });
 
     const thumbIcon = isLeft ? 'chevron-left' : 'chevron-right';
 
     return (
-        <View style={[styles.container, { backgroundColor: containerColor }]}>
-            <Text style={[styles.text, { color: textColor }]}>{text}</Text>
-            
-            <Animated.View
-                {...panResponder.panHandlers}
-                style={[
-                    styles.thumb,
-                    { backgroundColor: sliderColor },
-                    isLeft ? { right: THUMB_PADDING } : { left: THUMB_PADDING },
-                    animatedStyles
-                ]}
-            >
-                <Feather name={thumbIcon} size={28} color="#0b1326" />
-            </Animated.View>
+        <View style={{ width: BUTTON_WIDTH, height: THUMB_SIZE + (THUMB_PADDING * 2), position: 'relative' }}>
+            {/* Container Wave Overlays */}
+            {pulseEffect && !swiped && (
+                <Animated.View style={[
+                    StyleSheet.absoluteFillObject,
+                    { 
+                        backgroundColor: sliderColor, 
+                        borderRadius: 100, 
+                        transform: [{ scaleX: waveScaleX }, { scaleY: waveScaleY }], 
+                        opacity: waveOpacity 
+                    }
+                ]} pointerEvents="none" />
+            )}
+
+            <View style={[styles.container, { backgroundColor: containerColor, borderWidth: 1, borderColor: sliderColor }]}>
+                <Text style={[styles.text, { color: textColor }]}>{text}</Text>
+                
+                <Animated.View
+                    {...panResponder.panHandlers}
+                    style={[
+                        styles.thumb,
+                        { backgroundColor: sliderColor },
+                        isLeft ? { right: THUMB_PADDING } : { left: THUMB_PADDING },
+                        animatedStyles
+                    ]}
+                >
+                    <Feather name={thumbIcon} size={28} color="#0b1326" />
+                </Animated.View>
+            </View>
         </View>
     );
 };
