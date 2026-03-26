@@ -55,7 +55,8 @@
           "defaultChannel": "crash-service",
           "sounds": []
         }
-      ]
+      ],
+      "@maplibre/maplibre-react-native"
     ],
     "experiments": {
       "typedRoutes": true,

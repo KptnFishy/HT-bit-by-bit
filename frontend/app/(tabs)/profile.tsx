@@ -63,7 +63,7 @@ export default function Profile() {
     ];
 
     return (
-        <SafeAreaView edges={['top']} className="flex-1 bg-surface">
+        <SafeAreaView edges={['top']} className="flex-1 bg-surface pb-20">
             <ScrollView className="flex-1 py-4 px-4">
                 {/* User Profile Header */}
                 <View className="items-center mb-10 mt-6">

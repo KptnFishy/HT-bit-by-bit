@@ -48,7 +48,7 @@ const StatCard = ({ item, isHero }: { item: SkierStat; isHero?: boolean }) => {
       </View>
 
       <View className="flex-1 justify-end">
-        <Text className="text-gray-400 text-xs uppercase tracking-widest mb-1">{item.label}</Text>
+        <Text className="text-gray-400 text-xs uppercase tracking-widest mb-1" numberOfLines={1} adjustsFontSizeToFit >{item.label}</Text>
         <View className="flex-row items-baseline gap-1">
           <Text className={`${isHero ? 'text-6xl tracking-tighter' : 'text-3xl tracking-tight'} font-bold text-white`} numberOfLines={1} adjustsFontSizeToFit>
             {item.value}
