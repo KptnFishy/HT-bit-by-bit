@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useGyroscopeLogic } from '../functionality/gyroShii_NameNoNedFix';
+import { useGyroscopeLogic } from '../functionality/gyroscopeDaten';
 
 export default function App() {
   const {
